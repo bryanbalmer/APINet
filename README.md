@@ -11,6 +11,7 @@ ApiSite - Class for building and searching desired site.
 Example: Indeed API (From https://ads.indeed.com)
 
 Base Url: http://api.indeed.com/ads/apisearch?
+
 Request parameters: publisher, v (version), q (query), l (location).
 
 Response in XML:
@@ -49,7 +50,6 @@ Response in XML:
             <formattedLocationFull>Austin, TX</formattedLocationFull>
             <formattedRelativeTime>11 hours ago</formattedRelativeTime>
         </result>
-        ...
     </results>
 </response>
 ```
@@ -59,7 +59,7 @@ The desired data per result is the result names: _jobtitle_, _company_, _formatt
 
 Using this information, the class is created as follows:
 
-1. Set up base url, argument names, response result names, and parent node names.
+Set up base url, argument names, response result names, and parent node names.
 
 ```C#
 string baseUrl = "http://api.indeed.com/ads/apisearch?";
@@ -67,9 +67,9 @@ string[] argumentNames = new string[] { "publisher", "v", "q", "l" };
 string[] responseNames = new string[] { "jobtitle", "company", "formattedLocation", "snippet" };
 string[] parentNames = new string[] { "response", "results" };
 string responseName = "result";
-'''
+```
 
-2. Instantiate the ApiSite.
+Instantiate the ApiSite.
 
 ```C#
 ApiSite indeed = new ApiSite(baseUrl, argumentNames, responseNames);
@@ -77,13 +77,13 @@ indeed.ParentNodes = parentNames;
 indeed.ResponseName = responseName;
 ```
 
-3. Set argument values at needed.  This function returns the ApiSite so it can be chained.
+Set argument values at needed.  This function returns the ApiSite so it can be chained.
 
 ```C#
 indeed.SetArgumentValue("publisher", publisherKey).SetArgumentValue("v", "2");
 ```
 
-4. Search and get a list of ApiResponseItems.
+Search and get a list of ApiResponseItems.
 
 ```C#
 List<IndeedJob> jobList = new List<IndeedJob>();
