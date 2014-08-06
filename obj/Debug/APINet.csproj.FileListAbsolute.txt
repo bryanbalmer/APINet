@@ -1,0 +1,7 @@
+C:\Users\Bryan\Desktop\APINet\obj\Debug\APINet.csprojResolveAssemblyReference.cache
+C:\Users\Bryan\Desktop\APINet\bin\Debug\APINet.dll
+C:\Users\Bryan\Desktop\APINet\bin\Debug\APINet.pdb
+C:\Users\Bryan\Desktop\APINet\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Bryan\Desktop\APINet\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Bryan\Desktop\APINet\obj\Debug\APINet.dll
+C:\Users\Bryan\Desktop\APINet\obj\Debug\APINet.pdb
