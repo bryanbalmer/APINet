@@ -1,9 +1,5 @@
 ﻿using APINet.Data;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace APINet.Api
 {
@@ -12,9 +8,9 @@ namespace APINet.Api
     /// </summary>
     public abstract class SiteBase
     {
-        protected ApiRequestBuilder _requestBuild;
-        protected IDataRequest _dataRequest;
-        protected DataHandler _dataHandler = new DataHandler();
+        protected ApiRequestBuilder RequestBuild;
+        protected IDataRequest DataRequest;
+        protected DataHandler DataHandler = new DataHandler();
 
         /// <summary>
         /// Gets or sets the parent nodes.
@@ -22,7 +18,7 @@ namespace APINet.Api
         /// <value>
         /// The parent nodes are the topmost nodes leading to the desired data.
         /// </value>
-        public IEnumerable<string> ParentNodes { get; set; }
+        public ICollection<string> ParentNodes { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the response.
@@ -37,10 +33,10 @@ namespace APINet.Api
         /// </summary>
         /// <param name="baseUrl">The base URL.</param>
         /// <param name="arguments">The arguments required by the query string</param>
-        public SiteBase(string baseUrl, IEnumerable<string> arguments)
+        protected SiteBase(string baseUrl, IEnumerable<string> arguments)
         {
-            _requestBuild = new ApiRequestBuilder(baseUrl, arguments);
-            _dataRequest = new WebRequest();
+            RequestBuild = new ApiRequestBuilder(baseUrl, arguments);
+            DataRequest = new WebRequest();
         }
     }
 }

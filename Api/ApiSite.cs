@@ -1,10 +1,5 @@
-﻿using APINet.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace APINet.Api
 {
@@ -14,7 +9,7 @@ namespace APINet.Api
     /// </summary>
     public class ApiSite : SiteBase
     {
-        private IEnumerable<string> _responseNodes;
+        private readonly ICollection<string> _responseNodes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiSite"/> class.
@@ -22,8 +17,8 @@ namespace APINet.Api
         /// <param name="baseUrl">The base URL.</param>
         /// <param name="arguments">The arguments required by the query string</param>
         /// <param name="responseNodes">The names of the nodes to get values for.</param>
-        public ApiSite(string baseUrl, IEnumerable<string> arguments, IEnumerable<string> responseNodes)
-            :base(baseUrl, arguments)
+        public ApiSite(string baseUrl, IEnumerable<string> arguments, ICollection<string> responseNodes)
+            : base(baseUrl, arguments)
         {
             _responseNodes = responseNodes;
         }
@@ -36,7 +31,7 @@ namespace APINet.Api
         /// <returns></returns>
         public ApiSite SetArgumentValue(string argument, string value)
         {
-            _requestBuild.SetArgumentValue(argument, value);
+            RequestBuild.SetArgumentValue(argument, value);
             return this;
         }
 
@@ -47,9 +42,9 @@ namespace APINet.Api
         /// <returns></returns>
         public async Task<List<ApiResponseItem>> Search()
         {
-            string data = await _dataRequest.GetData(_requestBuild.SearchUrl());
-            _dataHandler.HandleData(data);
-            return _dataHandler.GetResults(ParentNodes, ResponseName, _responseNodes);
+            string data = await DataRequest.GetData(RequestBuild.SearchUrl());
+            DataHandler.HandleData(data);
+            return DataHandler.GetResults(ParentNodes, ResponseName, _responseNodes);
         }
     }
 }

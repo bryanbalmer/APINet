@@ -1,11 +1,9 @@
-﻿using APINet.Api;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using APINet.Api;
 
 namespace APINet.Data
 {
@@ -14,14 +12,14 @@ namespace APINet.Data
         private XmlNode _nodes;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlProcessor"/> class.
+        ///     Initializes a new instance of the <see cref="XmlProcessor" /> class.
         /// </summary>
         /// <param name="data">The XML data to be processed.</param>
         public XmlProcessor(string data)
         {
             try
             {
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 doc.LoadXml(data);
                 _nodes = doc;
             }
@@ -43,53 +41,58 @@ namespace APINet.Data
             }
         }
 
+        public List<ApiResponseItem> FindRelevantResults(ICollection<string> parentNodes, string resultName,
+            ICollection<string> resultNodes)
+        {
+            var results = new List<ApiResponseItem>();
+            ParseNodes(parentNodes);
+
+            foreach (XmlNode node in _nodes)
+            {
+                var apiResponseItem = new ApiResponseItem(resultNodes);
+                foreach (string resultNode in resultNodes)
+                {
+                    XmlNode selectSingleNode = node.SelectSingleNode(resultNode);
+                    if (selectSingleNode != null)
+                        apiResponseItem.SetSubItem(resultNode, selectSingleNode.InnerText);
+                }
+                results.Add(apiResponseItem);
+            }
+
+            return results;
+        }
+
+
+        public List<ApiResponseItem<TR>> FindRelevantResults<TR>(ICollection<string> parentNodes, string resultName)
+            where TR : struct
+        {
+            var results = new List<ApiResponseItem<TR>>();
+            ParseNodes(parentNodes);
+
+            var responseValues = (TR[]) Enum.GetValues(typeof (TR));
+            foreach (XmlNode node in _nodes)
+            {
+                var item = new ApiResponseItem<TR>();
+                foreach (TR r in responseValues)
+                {
+                    XmlNode selectSingleNode = node.SelectSingleNode(r.ToString());
+                    if (selectSingleNode != null)
+                        item.SetSubItem(r, selectSingleNode.InnerText);
+                }
+                results.Add(item);
+            }
+
+            return results;
+        }
+
         /// <summary>
-        /// Moves to the desired result node.
+        ///     Moves to the desired result node.
         /// </summary>
         /// <param name="parents">The parents of the result node.</param>
         private void ParseNodes(IEnumerable<string> parents)
         {
             foreach (string s in parents)
-                _nodes = _nodes.SelectSingleNode(s);
-        }
-
-        public List<ApiResponseItem> FindRelevantResults(IEnumerable<string> parentNodes, string resultName, IEnumerable<string> resultNodes)
-        {
-            List<ApiResponseItem> results = new List<ApiResponseItem>();
-            ParseNodes(parentNodes);
-
-            foreach (XmlNode node in _nodes)
-            {
-                ApiResponseItem item = new ApiResponseItem(resultNodes);
-                foreach (string s in resultNodes)
-                {
-                    item.SetSubItem(s, node.SelectSingleNode(s).InnerText);
-                }
-                results.Add(item);
-            }
-
-            return results;
-        }
-
-
-        public List<ApiResponseItem<R>> FindRelevantResults<R>(IEnumerable<string> parentNodes, string resultName)
-            where R : struct
-        {
-            List<ApiResponseItem<R>> results = new List<ApiResponseItem<R>>();
-            ParseNodes(parentNodes);
-
-            R[] responseValues = (R[])Enum.GetValues(typeof(R));
-            foreach (XmlNode node in _nodes)
-            {
-                ApiResponseItem<R> item = new ApiResponseItem<R>();
-                foreach (R r in responseValues)
-                {
-                    item.SetSubItem(r, node.SelectSingleNode(r.ToString()).InnerText);
-                }
-                results.Add(item);
-            }
-
-            return results;
+                if (_nodes != null) _nodes = _nodes.SelectSingleNode(s);
         }
     }
 }

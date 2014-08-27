@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace APINet.Data
@@ -14,7 +11,7 @@ namespace APINet.Data
         {
             string downloadedString = string.Empty;
 
-            using (WebClient client = new WebClient())
+            using (var client = new WebClient())
             {
                 try
                 {

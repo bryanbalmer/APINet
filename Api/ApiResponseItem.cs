@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace APINet.Api
 {
@@ -11,7 +8,7 @@ namespace APINet.Api
     /// </summary>
     public class ApiResponseItem
     {
-        private Dictionary<string, string> _subItems = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _subItems = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseItem"/> class.
@@ -19,9 +16,9 @@ namespace APINet.Api
         /// <param name="responseItemNames">The names of the response items.</param>
         public ApiResponseItem(IEnumerable<string> responseItemNames)
         {
-            foreach (string s in responseItemNames)
+            foreach (var responseItem in responseItemNames)
             {
-                _subItems.Add(s, string.Empty);
+                _subItems.Add(responseItem, string.Empty);
             }
         }
 
@@ -43,25 +40,22 @@ namespace APINet.Api
         /// <returns></returns>
         public string GetSubItem(string id)
         {
-            if (_subItems.ContainsKey(id))
-                return _subItems[id];
-            else
-                return string.Empty;
+            return _subItems.ContainsKey(id) ? _subItems[id] : string.Empty;
         }
     }
 
     /// <summary>
     /// Type safe Response item.
     /// </summary>
-    /// <typeparam name="R">An enum containing response items.</typeparam>
-    public class ApiResponseItem<R>
-        where R : struct
+    /// <typeparam name="TR">An enum containing response items.</typeparam>
+    public class ApiResponseItem<TR>
+        where TR : struct
     {
-        private Dictionary<R, string> _subItems = new Dictionary<R, string>();
+        private readonly Dictionary<TR, string> _subItems = new Dictionary<TR, string>();
 
         public ApiResponseItem()
         {
-            R[] items = (R[])Enum.GetValues(typeof(R));
+            var items = (TR[])Enum.GetValues(typeof(TR));
 
             foreach (var item in items)
             {
@@ -69,12 +63,12 @@ namespace APINet.Api
             }
         }
 
-        public void SetSubItem(R id, string value)
+        public void SetSubItem(TR id, string value)
         {
             _subItems[id] = value;
         }
 
-        public string GetSubItem(R id)
+        public string GetSubItem(TR id)
         {
             return _subItems[id];
         }

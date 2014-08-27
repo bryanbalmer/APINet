@@ -1,9 +1,7 @@
-﻿using System;
+﻿using APINet.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using APINet.Utility;
 
 namespace APINet.Api
 {
@@ -12,8 +10,8 @@ namespace APINet.Api
     /// </summary>
     public class ApiRequestBuilder
     {
-        private string _baseUrl;
-        private Dictionary<string, string> _arguments = new Dictionary<string,string>();
+        private readonly string _baseUrl;
+        private readonly Dictionary<string, string> _arguments = new Dictionary<string, string>();
         public IEnumerable<string> Arguments
         {
             get { return _arguments.Keys.AsEnumerable(); }
@@ -27,7 +25,7 @@ namespace APINet.Api
         public ApiRequestBuilder(string baseUrl, IEnumerable<string> arguments)
         {
             _baseUrl = baseUrl;
-            foreach (string s in arguments)
+            foreach (var s in arguments)
                 _arguments.Add(s, string.Empty);
         }
 
@@ -48,14 +46,14 @@ namespace APINet.Api
         /// <returns>System.String</returns>
         public string SearchUrl()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.Append(_baseUrl);
 
             if (_arguments.Count > 0)
                 sb.UrlAppend(_arguments.ElementAt(0));
 
-            for (int i = 1; i < _arguments.Count; i++)
+            for (var i = 1; i < _arguments.Count; i++)
             {
                 sb.UrlAndAppend(_arguments.ElementAt(i));
             }
