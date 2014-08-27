@@ -103,18 +103,20 @@ foreach (ApiResponseItem item in response)
 Enumerations can also be used to make it type-safe.
 
 ```C#
-enum IndeedArguments {
+enum IndeedArguments
+{
   publisher, v, q, l
 }
 
-enum IndeedResponseItem {
+enum IndeedResponseItem 
+{
   jobtitle, company, formattedLocation, snippet
 }
 
-class TypeSafeSearch {
-  ApiSite<IndeedArguments, IndeedResponseItem> indeed;
-  
-  public TypeSafeSearch() {
+...
+
+  private async Task<List<IndeedJob>> GetJobs()
+  {
     indeed = new ApiSite<IndeedArguments, IndeedResponseItem>(baseUrl);
     indeed.ParentNodes = parentNames;
     indeed.ResponseName = responseName;
@@ -122,18 +124,19 @@ class TypeSafeSearch {
     indeed.SetArgumentValue(IndeedArguments.publisher, publisherKey).SetArgumentValue(IndeedArguments.v, "2");
     
     List<IndeedJob> jobList = new List<IndeedJob>();
-    List<ApiResponseItem<ResponseNames>> response = await _indeedApi.Search();
+    List<ApiResponseItem<IndeedResponseItem>> response = await _indeedApi.Search();
 
-    foreach (ApiResponseItem<ResponseNames> item in response)
+    foreach (ApiResponseItem<IndeedResponseItem> item in response)
     {
       jobList.Add(new IndeedJob
       {
-        Title = item.GetSubItem(ResponseNames.jobtitle),
-        Company = item.GetSubItem(ResponseNames.company),
-        Location = item.GetSubItem(ResponseNames.formattedLocation),
-        Description = item.GetSubItem(ResponseNames.snippet)
+        Title = item.GetSubItem(IndeedResponseItem.jobtitle),
+        Company = item.GetSubItem(IndeedResponseItem.company),
+        Location = item.GetSubItem(IndeedResponseItem.formattedLocation),
+        Description = item.GetSubItem(IndeedResponseItem.snippet)
       });
     }
+    
+    return jobList;
   }
-}
 ```
