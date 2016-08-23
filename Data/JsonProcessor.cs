@@ -4,11 +4,13 @@ using System.Diagnostics;
 using APINet.Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace APINet.Data
 {
     public class JsonProcessor : IDataProcessor
     {
+        ILog _log = LogManager.GetLogger(typeof(JsonProcessor));
         private JToken _tokens;
 
         /// <summary>
@@ -23,19 +25,19 @@ namespace APINet.Data
             }
             catch (JsonReaderException ex)
             {
-                Debug.WriteLine("Error in {0} reading JSON: {1}", ex.Source, ex.Message);
+                _log.ErrorFormat("Error in {0} reading JSON: {1}", ex.Source, ex.Message);
             }
             catch (JsonSerializationException ex)
             {
-                Debug.WriteLine("Serialization Error in {0}: {1}", ex.Source, ex.Message);
+                _log.ErrorFormat("Serialization Error in {0}: {1}", ex.Source, ex.Message);
             }
             catch (JsonException ex)
             {
-                Debug.WriteLine("Error in {0} with JSON: {1}", ex.Source, ex.Message);
+                _log.ErrorFormat("Error in {0} with JSON: {1}", ex.Source, ex.Message);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Unspecified error: {0}", ex.Message);
+                _log.ErrorFormat("Unspecified error: {0}", ex.Message);
             }
         }
 

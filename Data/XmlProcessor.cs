@@ -4,11 +4,13 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.XPath;
 using APINet.Api;
+using log4net;
 
 namespace APINet.Data
 {
     public class XmlProcessor : IDataProcessor
     {
+        ILog _log = LogManager.GetLogger(typeof(XmlProcessor));
         private XmlNode _nodes;
 
         /// <summary>
@@ -25,19 +27,19 @@ namespace APINet.Data
             }
             catch (XmlException ex)
             {
-                Debug.WriteLine("Error with {0} loading the Xml Document: {1}", ex.Source, ex.Message);
+                _log.ErrorFormat("Error with {0} loading the Xml Document: {1}", ex.Source, ex.Message);
             }
             catch (XPathException ex)
             {
-                Debug.WriteLine("Error in {0} finding XPath expression: {1}", ex.Source, ex.Message);
+                _log.ErrorFormat("Error in {0} finding XPath expression: {1}", ex.Source, ex.Message);
             }
             catch (NullReferenceException ex)
             {
-                Debug.WriteLine("Null reference in {0} parsing XML: {1}", ex.TargetSite.Name, ex.Message);
+                _log.ErrorFormat("Null reference in {0} parsing XML: {1}", ex.TargetSite.Name, ex.Message);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Unspecified error: {0}", ex.Message);
+                _log.ErrorFormat("Unspecified error: {0}", ex.Message);
             }
         }
 
